@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Nexus Quantum OS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Rajdhani:wght@500;600;700;800;900&family=Share+Tech+Mono&display=swap');
+      
+      body {
+        font-family: 'Rajdhani', sans-serif;
+        background-color: #000000;
+        overflow: hidden;
+        color: white;
+        -webkit-tap-highlight-color: transparent;
+      }
+      
+      [dir="rtl"] {
+        font-family: 'Cairo', sans-serif;
+      }
+      
+      /* --- CINEMATIC TEXTURES --- */
+      
+      .bg-noise {
+        position: fixed;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        background: url('https://grainy-gradients.vercel.app/noise.svg');
+        opacity: 0.04;
+        pointer-events: none;
+        z-index: 0;
+      }
+      
+      .bg-scanlines {
+        background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+        background-size: 100% 3px;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 50;
+        opacity: 0.3;
+      }
+      
+      .bg-hex-grid {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2306b6d4' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        z-index: 1;
+        pointer-events: none;
+      }
+      
+      /* --- ADVANCED GLASS & UI --- */
+      
+      .glass-panel {
+        background: rgba(8, 12, 20, 0.75);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-top: 1px solid rgba(6, 182, 212, 0.3);
+        border-bottom: 1px solid rgba(6, 182, 212, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+      }
+      
+      .holo-card {
+        background: linear-gradient(160deg, rgba(20, 30, 45, 0.6) 0%, rgba(5, 10, 20, 0.9) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+      
+      .holo-card.active-device {
+        background: linear-gradient(160deg, rgba(6, 182, 212, 0.15) 0%, rgba(0, 0, 0, 0.9) 100%);
+        border-color: rgba(6, 182, 212, 0.6);
+        box-shadow: 0 0 25px rgba(6, 182, 212, 0.15), inset 0 0 10px rgba(6, 182, 212, 0.05);
+      }
+      
+      /* --- BOOT SEQUENCE ANIMATIONS --- */
+      
+      .glitch-text {
+        position: relative;
+      }
+      
+      .glitch-text::before, .glitch-text::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+      }
+      
+      .glitch-text::before {
+        left: 2px; text-shadow: -1px 0 #ff00c1; clip: rect(44px, 450px, 56px, 0);
+        animation: glitch-anim 5s infinite linear alternate-reverse;
+      }
+      
+      .glitch-text::after {
+        left: -2px; text-shadow: -1px 0 #00fff9; clip: rect(44px, 450px, 56px, 0);
+        animation: glitch-anim2 5s infinite linear alternate-reverse;
+      }
+      
+      /* --- NEW: UBER LOGO ANIMATION --- */
+      
+      .nexus-uber-logo {
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 900;
+        font-style: italic;
+        background: linear-gradient(110deg, #06b6d4 0%, #ffffff 25%, #00ffff 50%, #ffffff 75%, #06b6d4 100%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: shine-flow 4s linear infinite;
+        filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.6));
+      }
+      
+      @keyframes shine-flow {
+        to {
+          background-position: 200% center;
+        }
+      }
+      
+      @keyframes glitch-anim {
+        0% { clip: rect(12px, 9999px, 32px, 0); }
+        5% { clip: rect(65px, 9999px, 80px, 0); }
+        10% { clip: rect(2px, 9999px, 15px, 0); }
+        15% { clip: rect(90px, 9999px, 95px, 0); }
+        100% { clip: rect(40px, 9999px, 60px, 0); }
+      }
+      
+      @keyframes glitch-anim2 {
+        0% { clip: rect(80px, 9999px, 95px, 0); }
+        20% { clip: rect(10px, 9999px, 20px, 0); }
+        40% { clip: rect(30px, 9999px, 45px, 0); }
+        100% { clip: rect(50px, 9999px, 70px, 0); }
+      }
+      
+      /* Scrollbar hiding */
+      
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+
+<link rel="stylesheet" href="/index.css">
+  <script type="importmap">
+{
+  "imports": {
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "lucide-react": "https://esm.sh/lucide-react@^0.564.0",
+    "mqtt": "https://esm.sh/mqtt@^5.15.0",
+    "@libsql/client": "https://esm.sh/@libsql/client@^0.17.0"
+  }
+}
+</script>
+  <script type="module" crossorigin src="/screen/assets/index-BWSS7crL.js"></script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
